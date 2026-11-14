@@ -208,6 +208,19 @@ public class MainActivity extends Activity {
         } catch (Exception e) { return true; }
     }
 
+    // abre la página en el NAVEGADOR (no en la app de Instagram, Facebook…)
+    private void openInBrowser(String url) {
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            i.addCategory(Intent.CATEGORY_BROWSABLE);
+            i.setSelector(Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER));
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
+        } catch (Exception e) {
+            openExternal(url);
+        }
+    }
+
     private void openExternal(String url) {
         try {
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -372,6 +385,9 @@ public class MainActivity extends Activity {
 
         @JavascriptInterface
         public void open(String url) { openExternal(url); }
+
+        @JavascriptInterface
+        public void openBrowser(String url) { openInBrowser(url); }
 
         @JavascriptInterface
         public boolean saveFile(String b64, String name, String mime) {
